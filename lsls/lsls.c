@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <dirent.h>
+#include <sys/stat.h>
 
 /**
  * Main
@@ -7,12 +8,33 @@
 int main(int argc, char **argv)
 {
   // Parse command line
+    int i;
 
-  // Open directory
+    // to print out from the struct
+    struct dirent *ent;
 
-  // Repeatly read and print entries
+    // Open directory
+    DIR *d;
+    d = opendir(argv);
+    if (d == NULL){
+      fprintf(stderr, "ERROR MESSAGE");
+      exit();
+    }
 
-  // Close directory
+    // Repeatly read and print entries
+    ent = readdir(d);
+
+    printf("There are %d command line argument(s):\n", argc);
+    if (d != NULL){
+      for (i = 0; i < argc; i++) {
+        printf("   %s\n", argv->d_name);
+    }
+        // Close directory
+          
+          closedir(d);
+
+    }
+
 
   return 0;
 }
