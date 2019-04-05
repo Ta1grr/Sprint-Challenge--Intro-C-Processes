@@ -5,48 +5,46 @@
 /**
  * Main
  */
-int listing(const char *path) 
+int main(int argc, char **argv)
 {
-  // Declaring the ent pointer to struct dirent
+  // Parse command line
+  DIR *directory;
   struct dirent *ent;
 
-  // Declaring buff struct
   struct stat buf;
 
-  // Calling stat using the full address and buf address
   stat("./lsls.c", &buf);
 
-  // Declaring the directory pointer with DIR and assigning it with opendir()
-  DIR *directory = opendir(path);
+  printf("There are %d command line argument(s):\n", argc);
 
-  // Checking if the directory is NULL and returning proper from stderr
-  if (directory == NULL) 
-  {
-    // Using perror over fprintf(stderr, "strings") because it'll give a more precise error output.
-    perror("opendir");
-    return -1;
-  }
-
-  // While directory is not NULL it'll keep printing from readdir
-  while((ent = readdir(directory))){
-    printf("%10lld   %s\n", buf.st_size, ent->d_name);
-  }
-  closedir(directory);
-  return 0;
-}
-
-int main(int argc, char **argv) {
-
-  // If argc is 1 then it'll run current directory
-  if (argc == 1){
-    listing(".");
-  }
-  else{
-    // else it'll iterate through argc and run the array of argv through lsls function and output accordingly.
-    for (int i = 0; i < argc; i++) {
-      listing(argv[i]);
+  // Open directory
+    if (argc == 1) {
+      directory = opendir(".");
     }
-  }
+    else {
+      directory = opendir(argv[1]);
+    }
+    if (directory == NULL) {
+      perror("opendir");
+      return -1;
+    }
+  // Repeatly read and print entries
+    while((ent = readdir(directory))) {
+      printf("%10lld   %s\n", buf.st_size, ent->d_name);
+    }
+
+    /* Tried using for loops*/
+    // int length = sizeof(argv);
+
+    // for (int i = 0; i < length - 1; i++) {
+    //   ent = readdir(directory);
+    //   printf("%10lld   %s\n", buf.st_size, ent->d_name);
+    // }
+
+  // Close directory
+  closedir(directory);
+
+
 
   return 0;
 }
